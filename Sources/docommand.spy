@@ -3,7 +3,6 @@
 @import re
 @import os
 
-
 @shared ERR_MISSING_ARGUMENTS = "Missing arguments"
 
 @class Command
@@ -134,8 +133,8 @@
 	@property parser   = new Parser()
 	@property commands = []
 
-	@constructor configuration="/Users/sebastien/.docommands"
-		commands = parser parseFile (configuration)
+	@constructor configuration="~/.docommands"
+		commands = parser parseFile (os path expanduser(configuration))
 	@end
 	
 	@method commandWithName name:String

@@ -26,24 +26,24 @@ class Command(object):
 				argument_number = int(match.group(1))
 				default_argument = match.group(3)
 				default_argument_type = match.group(2)
-				self_1187968305_7117=res
-				self_1187968305_7117.append(["T", expression[offset:match.start()]])
+				self_1187969458_7189=res
+				self_1187969458_7189.append(["T", expression[offset:match.start()]])
 				if default_argument:
-					self_1187968305_7126=res
-					self_1187968305_7126.append(["O", argument_number, default_argument_type, default_argument])
+					self_1187969458_713=res
+					self_1187969458_713.append(["O", argument_number, default_argument_type, default_argument])
 				elif True:
-					self_1187968305_7164=res
-					self_1187968305_7164.append(["A", argument_number, None, None])
+					self_1187969458_7126=res
+					self_1187969458_7126.append(["A", argument_number, None, None])
 				offset = match.end()
 			elif True:
-				self_1187968305_7237=res
-				self_1187968305_7237.append(["T", expression[offset:]])
+				self_1187969458_7231=res
+				self_1187969458_7231.append(["T", expression[offset:]])
 				offset = len(expression)
 		return res
 	
 	def addArgument(self, defaultValue):
-		self_1187968305_7241=self.arguments
-		self_1187968305_7241.append((defaultValue or ""))
+		self_1187969458_7212=self.arguments
+		self_1187969458_7212.append((defaultValue or ""))
 	
 	"""Returns a list representing the initialized arguments from the given
 	(optional list of argument). When no argument is given, the the default
@@ -52,11 +52,11 @@ class Command(object):
 		if arguments is None: arguments = []
 		res=[]
 		for a in arguments:
-			self_1187968305_7234=res
-			self_1187968305_7234.append(a)
+			self_1187969458_7253=res
+			self_1187969458_7253.append(a)
 		while (len(res) < len(self.arguments)):
-			self_1187968305_7323=res
-			self_1187968305_7323.append(self.arguments[(len(res) - 1)])
+			self_1187969458_7325=res
+			self_1187969458_7325.append(self.arguments[(len(res) - 1)])
 		return res
 	
 	def getArity(self):
@@ -70,27 +70,27 @@ class Command(object):
 		arg_count=0
 		for element in self.parsedExpression:
 			if (element[0] == "T"):
-				self_1187968305_7343=res
-				self_1187968305_7343.append(element[1])
+				self_1187969458_7396=res
+				self_1187969458_7396.append(element[1])
 			elif (element[0] == "A"):
 				arg_number=element[1]
 				if (len(arguments) <= arg_number):
 					raise ERR_MISSING_ARGUMENTS
 				elif True:
-					self_1187968305_7323=res
-					self_1187968305_7323.append(arguments[arg_number])
+					self_1187969458_7319=res
+					self_1187969458_7319.append(arguments[arg_number])
 			elif (element[0] == "O"):
 				arg_number=element[1]
 				if (len(arguments) <= arg_number):
 					if (element[2] == ":"):
-						self_1187968305_7423=res
-						self_1187968305_7423.append((("`" + element[3]) + "`"))
+						self_1187969458_74100=res
+						self_1187969458_74100.append((("`" + element[3]) + "`"))
 					elif True:
-						self_1187968305_7416=res
-						self_1187968305_7416.append(element[3])
+						self_1187969458_7425=res
+						self_1187969458_7425.append(element[3])
 				elif True:
-					self_1187968305_742=res
-					self_1187968305_742.append(arguments[arg_number])
+					self_1187969458_7433=res
+					self_1187969458_7433.append(arguments[arg_number])
 		return "".join(res)
 	
 	def describe(self):
@@ -110,8 +110,8 @@ class Parser(object):
 				command_desc=line.split(":", 1)[1]
 				command_name = command_name.replace("\t", "").strip()
 				command_desc = command_desc.strip()
-				self_1187968305_7512=commands
-				self_1187968305_7512.append(Command(command_name, command_desc))
+				self_1187969458_7537=commands
+				self_1187969458_7537.append(Command(command_name, command_desc))
 		return commands
 	
 
@@ -119,8 +119,8 @@ class Interpreter(object):
 	def __init__ (self, configuration=None):
 		self.parser = Parser()
 		self.commands = []
-		if configuration is None: configuration = "/Users/sebastien/.docommands"
-		self.commands = self.parser.parseFile(configuration)
+		if configuration is None: configuration = "~/.docommands"
+		self.commands = self.parser.parseFile(os.path.expanduser(configuration))
 	
 	def commandWithName(self, name):
 		for command in self.commands:

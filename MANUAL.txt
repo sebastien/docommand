@@ -1,0 +1,82 @@
+== DoCommands
+== Sweet shortcuts for your shell
+
+About
+=====
+
+Shell aliases are a very common and easy way to make big shell commands shorter.
+However, shell aliases are rather primitive, so you'll soon need to write shell
+functions or shell scripts for your specific needs.
+
+_DoCommands_ idea is to provide you with a simple way to write *powerful,
+flexible aliases_. For instance, let's say you want to list every file in the
+current directory whose name contains 'test'.
+
+>   ls *test*
+
+It's not possible to do an alias that would be like 'ls *$0*', but with
+_DoCommands_, you can simply do:
+
+>   like: ls *${0}*
+
+and then:
+
+>   $ do like test
+>   do: ls *test*
+>   test-main.sh     test-component.sh
+
+Writing commands
+================
+
+_DoCommands_ reads its _command catalog_ from the '~/.docommands' file. The
+syntax for this file is very easy:
+
+>     # COMMENT
+>     COMMAND : EXPRESSION
+
+where 'COMMAND' is the name of the command (as the 'like' command we just
+defined), where 'EXPPRESSION' is a string containing _argument substitution
+expressions_.
+
+Argument substitution expressions are like this:
+
+>     ${0}                             (first argument)
+>     ${0=.}                           (first argument, or . by default)
+>     ${0:pwd}                         (first argument, or the result of '`pwd`)
+
+So here's an example of '~/.docommands' configuration file:
+
+>   edco    : $EDITOR ${0=~/.docommands}
+>   like    : ls -l *${0}*
+>   findr   : find ${1=.} -name "*${0}*"
+>   grep    : grep '${0}' ${1=*}
+>   grepr   : grep -r "${0}" ${1=.}
+>   list    : ls -l *${0=""}* :
+
+Running commands
+================
+
+Once installed, _DoCommands_ will provide a 'do' commmand to your shell
+environment. You can simply type 'do' to have a list of available commands:
+
+>   $ do
+>   edco   $EDITOR ${0=~/.docommands}
+>   like   ls -l *${0}*
+>   findr    find ${1=.} -name "*${0}*"
+>   grep   grep '${0}' ${1=*}
+>   grepr    grep -r "${0}" ${1=.}
+>   list   ls -l *${0=""}* :
+>   pushaj   hg push ssh://aj/Projects/`basename ${0%pwd}`
+>   pullplay   hg pull ssh://aj/Playgrounds/${0}/${1}ii
+
+then simply type 'do' followed by the name of the command you want to execute
+and the arguments:
+
+>   $ do findr test
+>   do:find . -name "*test*"
+>   ./Testing/Sources/testing.css
+>   ./Testing/Sources/testing.js
+
+The first line of the output will be the do command you just executed.
+
+# EOF - vim: ts=2 sw=2 et syn=kiwi

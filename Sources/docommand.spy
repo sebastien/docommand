@@ -7,7 +7,7 @@
 
 @class Command
 
-	@shared   RE_ARGUMENT = re compile "\${(\d+)([\:=]([^}]+))?}"
+	@shared   RE_ARGUMENT = re compile "\${(\d+)(([\:=])([^}]+))?}"
 	@property name:String = ""
 	@property expression:String = ""
 	@property parsedExpression:List = []
@@ -28,8 +28,8 @@
 			var match = RE_ARGUMENT search ( expression,offset )
 			if match
 				argument_number  = int( match group (1) )
-				default_argument = match group (3)
-				default_argument_type = match group (2)
+				default_argument = match group (4)
+				default_argument_type = match group (3)
 				res append ( ["T",expression[offset:match start()]] )
 				if default_argument
 					res append (["O",argument_number,default_argument_type,default_argument])
@@ -85,8 +85,14 @@
 			if element[0] == "O"
 				var arg_number = element[1]
 				if (len(arguments) <= arg_number)
+
 					if element[2] == ":"
-						res append ("`" + element[3] + "`")
+						var result = os popen(element[3]) read()
+						if result and result[-1] == "\n"
+							result = result [0:-1]
+						end
+						# FIXME: Check result
+						res append (result)
 					else
 						res append (element[3])
 					end

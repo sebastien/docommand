@@ -39,7 +39,7 @@
 				end
 				offset = match end()
 			else
-				res append ( ["T", expression[offset]] )
+				res append ( ["T", expression[offset:]] )
 				offset = len(expression)
 			end
 		end
@@ -99,6 +99,13 @@
 		return "" join (res)
 	@end
 
+	@method describe
+		return " " join ([
+			name
+			"\t"
+			expression
+		])
+	@end
 @end
 
 @class Parser
@@ -144,14 +151,23 @@
 		var command_name = arguments[0]
 		var command = commandWithName (command_name)
 		var script  = command fill (arguments[1:])
+		print ("do:" + script)
 		os system (script)
+	@end
+
+	@method listCommands
+		commands :: {c| print (c describe())}
 	@end
 
 @end
 
 @main args
 	var i = new Interpreter()
-	i run (args[1:])
+	if len (args) == 1
+		i listCommands()
+	else
+		i run (args[1:])
+	end
 @end
 
 # EOF - vim: ts=4 sw=4 noet syn=sugar

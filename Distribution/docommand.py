@@ -1,16 +1,17 @@
 #8< ---[docommand.py]---
+#!/usr/bin/env python
 import sys
 __module__ = sys.modules[__name__]
 import re
 import os
 __module_name__ = 'docommand'
 __version__ = '0.1.0'
-ERR_MISSING_ARGUMENTS = "Missing arguments"
-class Command(object):
-	RE_ARGUMENT = re.compile("\${(\d+)(([\:=])([^}]+))?}")
+ERR_MISSING_ARGUMENTS = 'Missing arguments'
+class Command:
+	RE_ARGUMENT = re.compile('\\${(\\d+)(([\\:=])([^}]+))?}')
 	def __init__ (self, name, expression):
-		self.name = ""
-		self.expression = ""
+		self.name = ''
+		self.expression = ''
 		self.parsedExpression = []
 		self.arguments = []
 		self.name = name
@@ -26,81 +27,69 @@ class Command(object):
 				argument_number = int(match.group(1))
 				default_argument = match.group(4)
 				default_argument_type = match.group(3)
-				self_1187970023_1157=res
-				self_1187970023_1157.append(["T", expression[offset:match.start()]])
+				res.append(['T', expression[offset:match.start()]])
 				if default_argument:
-					self_1187970023_1166=res
-					self_1187970023_1166.append(["O", argument_number, default_argument_type, default_argument])
+					res.append(['O', argument_number, default_argument_type, default_argument])
 				elif True:
-					self_1187970023_126=res
-					self_1187970023_126.append(["A", argument_number, None, None])
+					res.append(['A', argument_number, None, None])
 				offset = match.end()
 			elif True:
-				self_1187970023_1224=res
-				self_1187970023_1224.append(["T", expression[offset:]])
+				res.append(['T', expression[offset:]])
 				offset = len(expression)
 		return res
 	
 	def addArgument(self, defaultValue):
-		self_1187970023_1268=self.arguments
-		self_1187970023_1268.append((defaultValue or ""))
+		self.arguments.append((defaultValue or ''))
 	
-	"""Returns a list representing the initialized arguments from the given
-	(optional list of argument). When no argument is given, the the default
-	argument values are returned."""
 	def getArguments(self, arguments=None):
+		"""Returns a list representing the initialized arguments from the given
+		(optional list of argument). When no argument is given, the the default
+		argument values are returned."""
 		if arguments is None: arguments = []
 		res=[]
 		for a in arguments:
-			self_1187970023_1212=res
-			self_1187970023_1212.append(a)
-		while (len(res) < len(self.arguments)):
-			self_1187970023_1332=res
-			self_1187970023_1332.append(self.arguments[(len(res) - 1)])
+			res.append(a)
+		while (res.length() < self.arguments.length()):
+			res.append(self.arguments[(res.length() - 1)])
 		return res
 	
 	def getArity(self):
 		pass
 	
-	"""Fills the command template with the given arguments and returns the filled
-	expression as a string."""
 	def fill(self, arguments):
+		"""Fills the command template with the given arguments and returns the filled
+		expression as a string."""
 		res=[]
 		offset=0
 		arg_count=0
 		for element in self.parsedExpression:
-			if (element[0] == "T"):
-				self_1187970023_1385=res
-				self_1187970023_1385.append(element[1])
-			elif (element[0] == "A"):
+			if (element[0] == 'T'):
+				res.append(element[1])
+			elif (element[0] == 'A'):
 				arg_number=element[1]
 				if (len(arguments) <= arg_number):
 					raise ERR_MISSING_ARGUMENTS
 				elif True:
-					self_1187970023_1382=res
-					self_1187970023_1382.append(arguments[arg_number])
-			elif (element[0] == "O"):
+					res.append(arguments[arg_number])
+			elif (element[0] == 'O'):
 				arg_number=element[1]
 				if (len(arguments) <= arg_number):
-					if (element[2] == ":"):
+					if (element[2] == ':'):
 						result=os.popen(element[3]).read()
-						if (result and (result[-1] == "\n")):
+						if (result and (result[-1] == '\n')):
 							result = result[0:-1]
-						self_1187970023_1464=res
-						self_1187970023_1464.append(result)
+						res.append(result)
 					elif True:
-						self_1187970023_1432=res
-						self_1187970023_1432.append(element[3])
+						res.append(element[3])
 				elif True:
-					self_1187970023_1459=res
-					self_1187970023_1459.append(arguments[arg_number])
-		return "".join(res)
+					res.append(arguments[arg_number])
+		return ''.join(res)
 	
 	def describe(self):
-		return " ".join([self.name, "\t", self.expression])
+		return ' '.join([self.name, '\t', self.expression])
 	
 
-class Parser(object):
+class Parser:
 	"""Parses the '~/.docommand' file and returns a list of Command objects that can
 	be used by the interpreter."""
 	def parseFile(self, path):
@@ -108,34 +97,34 @@ class Parser(object):
 		commands=[]
 		for line in fd.readlines():
 			line = line.strip()
-			if (line and (line[0] != "#")):
-				command_name=line.split(":", 1)[0]
-				command_desc=line.split(":", 1)[1]
-				command_name = command_name.replace("\t", "").strip()
+			if (line and (line[0] != '#')):
+				name_desc=line.split(':', 1)
+				command_name=name_desc[0]
+				command_desc=name_desc[1]
+				command_name = command_name.replace('\t', '').strip()
 				command_desc = command_desc.strip()
-				self_1187970023_1512=commands
-				self_1187970023_1512.append(Command(command_name, command_desc))
+				commands.append(Command(command_name, command_desc))
 		return commands
 	
 
-class Interpreter(object):
+class Interpreter:
 	def __init__ (self, configuration=None):
 		self.parser = Parser()
 		self.commands = []
-		if configuration is None: configuration = "~/.docommands"
+		if configuration is None: configuration = '~/.docommands'
 		self.commands = self.parser.parseFile(os.path.expanduser(configuration))
 	
 	def commandWithName(self, name):
 		for command in self.commands:
 			if (command.name == name):
 				return command
-		raise Exception("Command not found")
+		raise Exception('Command not found')
 	
 	def run(self, arguments):
 		command_name=arguments[0]
 		command=self.commandWithName(command_name)
 		script=command.fill(arguments[1:])
-		print (("do:" + script))
+		print (('do:' + script))
 		os.system(script)
 	
 	def listCommands(self):

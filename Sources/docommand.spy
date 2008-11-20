@@ -123,7 +123,9 @@
 		for line:String in fd readlines()
 			line = line strip()
 			if line and line [0] != "#"
-				var command_name, command_desc = line split (":",1)
+				var name_desc    = line split (":",1)
+				var command_name = name_desc[0]
+				var command_desc = name_desc[1]
 				command_name = command_name replace ("\t", "") strip()
 				command_desc = command_desc strip()
 				commands append (new Command(command_name, command_desc))

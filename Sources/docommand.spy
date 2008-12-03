@@ -158,7 +158,7 @@
 		var command_name = arguments[0]
 		var command = commandWithName (command_name)
 		var script  = command fill (arguments[1:])
-		print ("do:" + script)
+		sys stderr write ("do:" + script + "\n")
 		os system (script)
 	@end
 

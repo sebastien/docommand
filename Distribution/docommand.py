@@ -123,7 +123,7 @@ class Interpreter:
 		command_name=arguments[0]
 		command=self.commandWithName(command_name)
 		script=command.fill(arguments[1:])
-		print (('do:' + script))
+		sys.stderr.write((('do:' + script) + '\n'))
 		os.system(script)
 	
 	def listCommands(self):

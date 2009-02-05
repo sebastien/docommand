@@ -66,8 +66,6 @@ environment. You can simply type 'do' to have a list of available commands:
 >   grep   grep '${0}' ${1=*}
 >   grepr    grep -r "${0}" ${1=.}
 >   list   ls -l *${0=""}* :
->   pushaj   hg push ssh://aj/Projects/`basename ${0%pwd}`
->   pullplay   hg pull ssh://aj/Playgrounds/${0}/${1}ii
 
 then simply type 'do' followed by the name of the command you want to execute
 and the arguments:
@@ -78,5 +76,16 @@ and the arguments:
 >   ./Testing/Sources/testing.js
 
 The first line of the output will be the do command you just executed.
+
+Tips and Tricks
+===============
+
+- You can get a lot of cool one-liners at Command Line Fu
+  (<http://www.commandlinefu.com>).
+
+- To have command completion with TCSH, simply do
+  >   set DOCOMMANDS=`cat ~/.docommands | cut -d':' -f1 | egrep '^[^ #].*$' | xargs echo`
+  >   set DOCOMPLETE="p/1/(${DOCOMMANDS})/"
+  >   complete do "${DOCOMPLETE}"
 
 # EOF - vim: ts=2 sw=2 et syn=kiwi

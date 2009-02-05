@@ -25,6 +25,14 @@ and then:
 >   do: ls *test*
 >   test-main.sh     test-component.sh
 
+Installing
+==========
+
+You just need Python 2.4+. Copy the 'Distribution/docommand.py' somewhere in
+your path.
+
+>   cp Distribution/docommand.py /usr/local/bin/do
+
 Writing commands
 ================
 
